@@ -28,6 +28,27 @@ const SIGNUP_SELECTORS = {
   sendCode: ".otp-login"
 }
 
+const SIDEBAR_SELECTORS = {
+  property: "#js-btn-property",
+  general: "p[data-segment-event='Property General Clicked']",
+  rooms: "p[data-segment-event='Property Rooms Clicked']"
+}
+
+const PROPERTY_SELECTORS = {
+  propertyName: "#hotel_info_hotel_name",
+  email: "#hotel_info_hotel_email",
+  phone: "#hotel_info_phone_number",
+  additionalPhone: "#hotel_info_optional_phone_number",
+  registrationNumber: "#hotel_info_company_registration_number",
+  address: "#hotel_info_address",
+  city: "#hotel_info_city",
+  zipCode: "#hotel_info_zip",
+  region: "#hotel_info_region",
+  country: "#hotel_info_country",
+  saveBtn: "button[type='submit']",
+  selectedCountry: "select#hotel_info_country option:selected",
+}
+
 let inboxId
 let emailAddress
 
@@ -102,6 +123,28 @@ describe("new user journey!", () => {
       cy.url().should('include', PATHNAMES.admin.dashboard)
 
     })
+
+  })
+
+  it("fill out general form", () => {
+    cy.visit(PATHNAMES.signin.form)
+      .get(SIGNUP_SELECTORS.email).type(emailAddress)
+      .get(SIGNUP_SELECTORS.password).type(userData.validPassword)
+      .get(SIGNUP_SELECTORS.logInBtn).click()
+
+    cy.get(SIDEBAR_SELECTORS.property).click()
+      .get(SIDEBAR_SELECTORS.general).should('have.descendants', "a").click()
+    cy.url().should('include', PATHNAMES.admin.hotelPropertiesSetup)
+      .get(PROPERTY_SELECTORS.propertyName).clear().type(hotelData.propertyName)
+      .get(PROPERTY_SELECTORS.email).should('have.value', emailAddress)
+      .get(PROPERTY_SELECTORS.phone).should('have.value', hotelData.phone)
+      .get(PROPERTY_SELECTORS.address).type(hotelData.address)
+      .get(PROPERTY_SELECTORS.city).type(hotelData.city)
+      .get(PROPERTY_SELECTORS.zipCode).type(hotelData.zip)
+      .get(PROPERTY_SELECTORS.selectedCountry).should('have.text', hotelData.country)
+      .get(PROPERTY_SELECTORS.saveBtn).click()
+
+    cy.url().should('include', PATHNAMES.admin.dashboard)
 
   })
 
