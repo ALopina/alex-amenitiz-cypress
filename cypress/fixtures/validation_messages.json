@@ -1,0 +1,6 @@
+{
+    "requiredField": "can't be blank",
+    "shortPassword": "is too short (minimum is 6 characters)",
+    "passwordTip": "Should be at least 6 characters long",
+    "invalid": "is invalid"
+}
