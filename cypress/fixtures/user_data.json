@@ -1,0 +1,8 @@
+{
+    "validEmail": "test123@test.test",
+    "invalidEmail": "test123@test",
+    "validPassword": "12345678",
+    "invalidPassword": "123",
+    "firstName": "Lorem",
+    "lastName": "Ipsum"
+}

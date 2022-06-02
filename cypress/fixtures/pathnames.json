@@ -1,0 +1,20 @@
+{
+    "signup": {
+        "form": "/en/users/sign_up",
+        "hotelOwnerStep": "/hotel/owner",
+        "hotelPropertyStep": "/hotel/property",
+        "languageStep": "/hotel/language",
+        "propertyTypeStep": "/hotel/property-type",
+        "trialSelectionStep": "/hotel/trial-plan"
+    },
+    "signin": {
+        "form": "/en/users/sign_in",
+        "twoStepAuth": "/users/two_factor_authentication"
+    },
+    "admin": {
+        "dashboard": "/admin",
+        "hotelPropertiesSetup": "/property/general",
+        "hotelRoomsList": "/admin/rooms",
+        "newRoom": "/admin/rooms/new"
+    }
+}
