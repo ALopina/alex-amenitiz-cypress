@@ -1,0 +1,14 @@
+{
+    "name": "Double room with sea view",
+    "type": "Room",
+    "description": "Description of my double room with sea view",
+    "number": "2",
+    "maxGuests": "2",
+    "maxAdults": "2",
+    "size": "15",
+    "price": "80",
+    "vat": "21.2",
+    "bedType": "Twin bed",
+    "bedQty": "2",
+    "features": ["TV", "Wifi", "Minibar", "Safe"]
+}

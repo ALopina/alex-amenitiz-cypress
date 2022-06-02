@@ -49,6 +49,32 @@ const PROPERTY_SELECTORS = {
   selectedCountry: "select#hotel_info_country option:selected",
 }
 
+const ROOM_SELECTORS = {
+  accomodationType: "select#room_room_type",
+  selectedAccomodationType: "select#room_room_type option:selected",
+  name: "input#room_name_en",
+  description: "div[aria-multiline='true']",
+  numberOfRooms: "input#room_number_of_rooms",
+  maxGuests: "input#room_max_occupancy",
+  maxAdults: "input#room_max_adults",
+  roomSize: "input#room_size",
+  seaView: "#sea_view",
+  defaultPrice: "input#room_default_price",
+  vatRate: "input#room_vat_rate",
+  visibleOnBookingEngine: "select#room_shown_on_amenitiz",
+  visibleOnBEselected: "select#room_shown_on_amenitiz option:selected",
+  visibleOnWebsite: "select#room_shown_on_website",
+  visibleOnWSselected: "select#room_shown_on_website option:selected",
+  bedType: "select[data-qa='select_bed_type']",
+  quantity: "input[data-qa='input_bed_number']",
+  addBedBtn: ".js-add-bed",
+  viewAllAmenities: "p#view-all",
+  roomAmenities: ".checkbox",
+  roomGallery: "#list-pictures-room img",
+  uploadImage: "#room_photos",
+  saveBtn: "form#new_room button[type='submit']"
+}
+
 let inboxId
 let emailAddress
 
@@ -145,6 +171,52 @@ describe("new user journey!", () => {
       .get(PROPERTY_SELECTORS.saveBtn).click()
 
     cy.url().should('include', PATHNAMES.admin.dashboard)
+
+  })
+
+  it("fill out property form", function () {
+    const roomData = require("../fixtures/new_room.json")
+
+    cy.visit(PATHNAMES.signin.form)
+      .get(SIGNUP_SELECTORS.email).type(emailAddress)
+      .get(SIGNUP_SELECTORS.password).type(userData.validPassword)
+      .get(SIGNUP_SELECTORS.logInBtn).click()
+
+    cy.get(SIDEBAR_SELECTORS.property).click()
+      .get(SIDEBAR_SELECTORS.rooms).should('have.descendants', "a").click()
+    cy.url().should('include', PATHNAMES.admin.hotelRoomsList)
+
+    //fill out rooms form
+    cy.get("button[type='submit']").click()
+      .url().should('include', PATHNAMES.admin.newRoom)
+      .get(ROOM_SELECTORS.selectedAccomodationType).should('have.text', roomData.type)
+      .get(ROOM_SELECTORS.name).type(roomData.name)
+      .get(ROOM_SELECTORS.description).type(roomData.description)
+      .get(ROOM_SELECTORS.numberOfRooms).clear().type(roomData.number)
+      .get(ROOM_SELECTORS.maxGuests).clear().type(roomData.maxGuests)
+      .get(ROOM_SELECTORS.maxAdults).clear().type(roomData.maxAdults)
+      .get(ROOM_SELECTORS.roomSize).clear().type(roomData.size)
+      .get(ROOM_SELECTORS.seaView).click().should('have.descendants', ".icon_check_in_circle")
+
+      .get(ROOM_SELECTORS.defaultPrice).clear().type(roomData.price)
+      .get(ROOM_SELECTORS.vatRate).clear().type(roomData.vat)
+      .get(ROOM_SELECTORS.visibleOnBEselected).should('have.text', "Yes")
+      .get(ROOM_SELECTORS.visibleOnWSselected).should('have.text', "Yes")
+      .get(ROOM_SELECTORS.bedType).select(roomData.bedType)
+      .get(ROOM_SELECTORS.quantity).clear().type(roomData.bedQty)
+      .get(ROOM_SELECTORS.viewAllAmenities).click()
+
+    for (const feature of roomData.features) {
+      cy.get(ROOM_SELECTORS.roomAmenities).contains(feature).click()
+    }
+
+    cy.get(ROOM_SELECTORS.uploadImage).selectFile("cypress/fixtures/images/test-hotel-room.jpg", { force: true })
+      .get(ROOM_SELECTORS.roomGallery, { timeout: 10000 }).should('have.length', 1)
+      .get(ROOM_SELECTORS.saveBtn).contains("Save").click()
+
+    // assert room created
+    cy.url().should('include', PATHNAMES.admin.hotelRoomsList)
+    cy.get(".a__card").should('include.text', roomData.name)
 
   })
 
